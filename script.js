@@ -446,7 +446,7 @@ function slugify(str) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-+|-+$)/g, '');
 }
-
+/*
 function dishCard(catId, catName, groupLabel, item) {
   const key = itemKey(catId, groupLabel, item.name);
   const imgSlug = [catId, groupLabel ? slugify(groupLabel) : '', slugify(item.name)]
@@ -477,6 +477,74 @@ function dishCard(catId, catName, groupLabel, item) {
     </div>
   </div>`;
 }
+*/
+
+// Clean slug function - spaces matrum dashes-ai '_' aaga maathum
+function customSlug(str) {
+  if (!str) return '';
+  return str
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\-_]+/g, '_') // Space, dash, underscore ellaame '_' aagum
+    .replace(/[^\w\_]+/g, ''); // Unwanted characters-ai remove pannum
+}
+
+function dishCard(catId, catName, groupLabel, item) {
+  const key = itemKey(catId, groupLabel, item.name);
+  
+  // Custom slug generator use panni '_'-al mattum connect panroam
+  const cleanCat = customSlug(catId);
+  const cleanGroup = groupLabel ? customSlug(groupLabel) : '';
+  const cleanName = customSlug(item.name);
+
+  // Filter panni ellaam '_' vaadhiyaa seiyum
+  const imgSlug = [cleanCat, cleanGroup, cleanName]
+    .filter(Boolean)
+    .join('_');
+
+  const imgPath = `products/${imgSlug}.png`;
+
+  return `<div class="dish-card" data-key="${key}">
+    <div class="dish-img-wrap">
+      <img src="${imgPath}" 
+           alt="${item.name.replace(/"/g, '&quot;')}" 
+           loading="lazy"
+           onerror="handleImgError(this, '${cleanCat}', '${cleanName}')">
+    </div>
+    <div class="dcontent">
+      <p class="dname display">${item.name}</p>
+      <p class="ddesc">${item.desc}</p>
+      <div class="drow">
+        <span class="dprice">${item.price}<sup>DH</sup></span>
+        <button class="addbtn" 
+          data-key="${key}" 
+          data-cat="${catId}" 
+          data-catname="${catName.replace(/"/g, '&quot;')}" 
+          data-groupname="${(groupLabel || '').replace(/"/g, '&quot;')}"
+          data-group="${groupLabel || ''}" 
+          data-name="${item.name.replace(/"/g, '&quot;')}" 
+          data-desc="${item.desc.replace(/"/g, '&quot;')}" 
+          data-price="${item.price}" 
+          aria-label="Ajouter ${item.name}">+</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function handleImgError(imgElement, cat, name) {
+  const secondaryPath = `products/${cat}_${name}.png`;
+  
+  if (!imgElement.dataset.retried) {
+    imgElement.dataset.retried = "true";
+    imgElement.src = secondaryPath;
+  } else {
+    imgElement.classList.add('img-broken');
+    imgElement.onerror = null;
+  }
+}
+/*****************************************************************************************/ 
+
 
 function renderAllMenu() {
   if (!tabsEl || !contentEl) return;
