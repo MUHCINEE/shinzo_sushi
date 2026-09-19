@@ -727,7 +727,7 @@ if (document.getElementById('sendWaBtn')) {
     const phone = document.getElementById('custPhone').value.trim() || 'Non renseigné';
     let total = 0;
 
-    // zedna ism categorie f msg d cmmnd 
+    // zedna ism categorie f msg d cmmnd et forma d msg
     let lines = keys.map(k => {
       const it = cart[k];
       total += it.price * it.qty;
