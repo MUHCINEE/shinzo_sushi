@@ -414,128 +414,218 @@ const GALLERY_IMAGES = [
 ];
 
 // ---------- State ----------
-let cart = {}; // key -> {name, price, qty, desc, cat}
+// Global Cart State
+let cart = {};
 let userLoc = null;
-
-// ---------- Header scroll ----------
-const header = document.getElementById('siteHeader');
-window.addEventListener('scroll', ()=>{
-  header.classList.toggle('scrolled', window.scrollY > 40);
-}, {passive:true});
-document.getElementById('yr').textContent = new Date().getFullYear();
 
 // ---------- Mobile menu ----------
 const mm = document.getElementById('mobileMenu');
-document.getElementById('burgerBtn').addEventListener('click', ()=> mm.classList.add('open'));
-document.getElementById('closeMM').addEventListener('click', ()=> mm.classList.remove('open'));
-mm.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> mm.classList.remove('open')));
+if (document.getElementById('burgerBtn')) {
+  document.getElementById('burgerBtn').addEventListener('click', () => mm.classList.add('open'));
+}
+if (document.getElementById('closeMM')) {
+  document.getElementById('closeMM').addEventListener('click', () => mm.classList.remove('open'));
+}
+if (mm) {
+  mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mm.classList.remove('open')));
+}
 
-// ---------- Render category tabs + content ----------
+// ---------- Render Category Tabs + All Content ----------
 const tabsEl = document.getElementById('catTabs');
 const contentEl = document.getElementById('catContent');
 
-function itemKey(catId, groupLabel, name){
-  return (catId+'|'+(groupLabel||'')+'|'+name).replace(/\s+/g,'_');
+function itemKey(catId, groupLabel, name) {
+  return (catId + '|' + (groupLabel || '') + '|' + name).replace(/\s+/g, '_');
 }
 
-function dishCard(catId, groupLabel, item){
+// Turns "Crème Cheese" -> "creme-cheese" so each dish gets a predictable image filename.
+function slugify(str) {
+  return String(str)
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-+|-+$)/g, '');
+}
+
+function dishCard(catId, catName, groupLabel, item) {
   const key = itemKey(catId, groupLabel, item.name);
+  const imgSlug = [catId, groupLabel ? slugify(groupLabel) : '', slugify(item.name)]
+    .filter(Boolean).join('-');
+  const imgPath = `images/dishes/${imgSlug}.jpg`;
+
   return `<div class="dish-card" data-key="${key}">
-    <p class="dname display">${item.name}</p>
-    <p class="ddesc">${item.desc}</p>
-    <div class="drow">
-      <span class="dprice">${item.price}<sup>DH</sup></span>
-      <button class="addbtn" data-key="${key}" data-cat="${catId}" data-group="${groupLabel||''}" data-name="${item.name.replace(/"/g,'&quot;')}" data-desc="${item.desc.replace(/"/g,'&quot;')}" data-price="${item.price}" aria-label="Ajouter ${item.name}">+</button>
+    <div class="dish-img-wrap">
+      <img src="${imgPath}" alt="${item.name.replace(/"/g, '&quot;')}" loading="lazy"
+        onerror="this.classList.add('img-broken'); this.onerror=null;">
+    </div>
+    <div class="dcontent">
+      <p class="dname display">${item.name}</p>
+      <p class="ddesc">${item.desc}</p>
+      <div class="drow">
+        <span class="dprice">${item.price}<sup>DH</sup></span>
+        <button class="addbtn" 
+          data-key="${key}" 
+          data-cat="${catId}" 
+          data-catname="${catName.replace(/"/g, '&quot;')}" 
+          data-group="${groupLabel || ''}" 
+          data-name="${item.name.replace(/"/g, '&quot;')}" 
+          data-desc="${item.desc.replace(/"/g, '&quot;')}" 
+          data-price="${item.price}" 
+          aria-label="Ajouter ${item.name}">+</button>
+      </div>
     </div>
   </div>`;
 }
 
-function renderCategory(cat){
-  let html = `<div class="cat-tag"><h3 class="display">${cat.name}</h3><span class="tagline">${cat.tagline||''}</span></div>`;
+function renderAllMenu() {
+  if (!tabsEl || !contentEl) return;
 
-  const renderRow = (items, groupLabel)=>{
-    const rowId = 'row_'+Math.random().toString(36).slice(2,9);
-    let out = '';
-    if(groupLabel) out += `<div class="group-label">${groupLabel}</div>`;
-    out += `<div class="carousel-row">
-      <div class="carousel-track" id="${rowId}">
-        ${items.map(it=>dishCard(cat.id, groupLabel, it)).join('')}
-      </div>
-    </div>`;
-    return out;
-  };
+  tabsEl.innerHTML = '';
+  contentEl.innerHTML = '';
 
-  if(cat.groups){
-    cat.groups.forEach(g=>{ html += renderRow(g.items, g.label); });
-  } else {
-    html += renderRow(cat.items, null);
-  }
-  contentEl.innerHTML = html;
+  MENU.forEach((cat, index) => {
+    const tab = document.createElement('button');
+    tab.className = 'cat-tab' + (index === 0 ? ' active' : '');
+    tab.textContent = cat.name;
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const targetSec = document.getElementById(`cat-${cat.id}`);
+      if (targetSec) {
+        targetSec.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+    tabsEl.appendChild(tab);
 
-  // center-scaling for each carousel row
-  document.querySelectorAll('.carousel-track').forEach(setupCarousel);
+    const sec = document.createElement('div');
+    sec.id = `cat-${cat.id}`;
+    sec.className = 'menu-category-section';
+
+    let html = `<div class="cat-tag"><h3 class="display">${cat.name}</h3><span class="tagline">${cat.tagline || ''}</span></div>`;
+
+    const renderRow = (items, groupLabel) => {
+      const rowId = 'row_' + Math.random().toString(36).slice(2, 9);
+      let out = '';
+      if (groupLabel) out += `<div class="group-label">${groupLabel}</div>`;
+      out += `<div class="carousel-row">
+        <div class="carousel-track" id="${rowId}">
+          ${items.map(it => dishCard(cat.id, cat.name, groupLabel, it)).join('')}
+        </div>
+      </div>`;
+      return out;
+    };
+
+    if (cat.groups) {
+      cat.groups.forEach(g => { html += renderRow(g.items, g.label); });
+    } else {
+      html += renderRow(cat.items, null);
+    }
+
+    sec.innerHTML = html;
+    contentEl.appendChild(sec);
+  });
+
+  // Center-scaling + PC mouse drag-to-scroll on every product row
+  document.querySelectorAll('.carousel-track').forEach(track => {
+    setupCarousel(track);
+    enableDragScroll(track);
+  });
   attachAddButtons();
 }
 
-function setupCarousel(track){
-  function update(){
+function setupCarousel(track) {
+  function update() {
     const rect = track.getBoundingClientRect();
-    const center = rect.left + rect.width/2;
+    const center = rect.left + rect.width / 2;
     let closest = null, closestDist = Infinity;
-    track.querySelectorAll('.dish-card').forEach(card=>{
+    track.querySelectorAll('.dish-card').forEach(card => {
       const cr = card.getBoundingClientRect();
-      const ccenter = cr.left + cr.width/2;
+      const ccenter = cr.left + cr.width / 2;
       const dist = Math.abs(center - ccenter);
-      if(dist < closestDist){ closestDist = dist; closest = card; }
+      if (dist < closestDist) { closestDist = dist; closest = card; }
     });
-    track.querySelectorAll('.dish-card').forEach(c=> c.classList.toggle('is-center', c===closest));
+    track.querySelectorAll('.dish-card').forEach(c => c.classList.toggle('is-center', c === closest));
   }
-  track.addEventListener('scroll', ()=> requestAnimationFrame(update), {passive:true});
+  track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
   update();
   setTimeout(update, 60);
   window.addEventListener('resize', update);
 }
 
-function attachAddButtons(){
-  document.querySelectorAll('.addbtn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
+function attachAddButtons() {
+  document.querySelectorAll('.addbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
       const key = btn.dataset.key;
-      if(!cart[key]){
-        cart[key] = { name:btn.dataset.name, desc:btn.dataset.desc, price:parseFloat(btn.dataset.price), qty:0 };
+      if (!cart[key]) {
+        cart[key] = { 
+          name: btn.dataset.name, 
+          catName: btn.dataset.catname, // hna zedna ism d categorie
+          desc: btn.dataset.desc, 
+          price: parseFloat(btn.dataset.price), 
+          qty: 0 
+        };
       }
       cart[key].qty += 1;
       btn.classList.add('added');
-      setTimeout(()=> btn.classList.remove('added'), 350);
+      setTimeout(() => btn.classList.remove('added'), 350);
       renderCart();
       saveCartFlash();
     });
   });
 }
 
-function saveCartFlash(){
+function saveCartFlash() {
   const badge = document.getElementById('cartBadge');
-  badge.style.transform = 'scale(1.3)';
-  setTimeout(()=> badge.style.transform='scale(1)', 180);
+  if (badge) {
+    badge.style.transform = 'scale(1.3)';
+    setTimeout(() => badge.style.transform = 'scale(1)', 180);
+  }
 }
 
-// Build tabs
-MENU.forEach((cat,i)=>{
-  const tab = document.createElement('button');
-  tab.className = 'cat-tab' + (i===0?' active':'');
-  tab.textContent = cat.name;
-  tab.addEventListener('click', ()=>{
-    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    renderCategory(cat);
+// ---------- Drag / Scroll functionality for PC Mouse (Category Tabs + Product Rows) ----------
+// Reusable: works on .cat-tabs and on every .carousel-track (dish rows).
+function enableDragScroll(el, speed = 1.4) {
+  if (!el || el.dataset.dragBound === '1') return;
+  el.dataset.dragBound = '1';
+  el.classList.add('drag-scroll');
+
+  let isDown = false;
+  let startX = 0;
+  let scrollLeft = 0;
+  let moved = false;
+
+  el.addEventListener('mousedown', (e) => {
+    isDown = true;
+    moved = false;
+    el.classList.add('dragging');
+    startX = e.pageX - el.offsetLeft;
+    scrollLeft = el.scrollLeft;
   });
-  tabsEl.appendChild(tab);
-});
-renderCategory(MENU[0]);
 
-document.querySelectorAll('.carousel-row').forEach(()=>{});
+  const stopDrag = () => {
+    isDown = false;
+    el.classList.remove('dragging');
+  };
+  el.addEventListener('mouseleave', stopDrag);
+  el.addEventListener('mouseup', stopDrag);
 
-// ---------- Carousel nav arrows (delegate, since rows are re-rendered) ----------
-// (arrows omitted in favor of native touch/scroll + snap, per row simplicity)
+  el.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - startX) * speed;
+    if (Math.abs(walk) > 3) moved = true;
+    el.scrollLeft = scrollLeft - walk;
+  });
+
+  // Prevent a drag from also firing a click on inner buttons/cards.
+  el.addEventListener('click', (e) => {
+    if (moved) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+}
+
+renderAllMenu();
+enableDragScroll(tabsEl);
 
 // ---------- Cart rendering ----------
 const cartBody = document.getElementById('cartBody');
@@ -543,143 +633,166 @@ const cartFoot = document.getElementById('cartFoot');
 const cartBadge = document.getElementById('cartBadge');
 const cartTotalEl = document.getElementById('cartTotal');
 
-function renderCart(){
-  const keys = Object.keys(cart).filter(k=>cart[k].qty>0);
-  const totalQty = keys.reduce((s,k)=> s+cart[k].qty, 0);
-  cartBadge.style.display = totalQty>0 ? 'flex' : 'none';
-  cartBadge.textContent = totalQty;
+function renderCart() {
+  const keys = Object.keys(cart).filter(k => cart[k].qty > 0);
+  const totalQty = keys.reduce((s, k) => s + cart[k].qty, 0);
+  if (cartBadge) {
+    cartBadge.style.display = totalQty > 0 ? 'flex' : 'none';
+    cartBadge.textContent = totalQty;
+  }
 
-  if(keys.length===0){
-    cartBody.innerHTML = '<div class="cart-empty">Votre panier est vide pour l&rsquo;instant.</div>';
-    cartFoot.style.display = 'none';
+  if (keys.length === 0) {
+    if (cartBody) cartBody.innerHTML = '<div class="cart-empty">Votre panier est vide pour l&rsquo;instant.</div>';
+    if (cartFoot) cartFoot.style.display = 'none';
     return;
   }
-  cartFoot.style.display = 'block';
+  if (cartFoot) cartFoot.style.display = 'block';
   let total = 0;
-  cartBody.innerHTML = keys.map(k=>{
-    const it = cart[k];
-    total += it.price*it.qty;
-    return `<div class="cart-item">
-      <div class="ci-info">
-        <div class="ci-name">${it.name}</div>
-        <div class="ci-desc">${it.desc}</div>
-        <div class="ci-price">${it.price} DH</div>
-        <button class="ci-remove" data-key="${k}">RETIRER</button>
-      </div>
-      <div class="ci-qty">
-        <button data-act="dec" data-key="${k}">−</button>
-        <span>${it.qty}</span>
-        <button data-act="inc" data-key="${k}">+</button>
-      </div>
-    </div>`;
-  }).join('');
-  cartTotalEl.textContent = total + ' DH';
+  if (cartBody) {
+    cartBody.innerHTML = keys.map(k => {
+      const it = cart[k];
+      total += it.price * it.qty;
+      return `<div class="cart-item">
+        <div class="ci-info">
+          <div class="ci-name">${it.name} <small style="color:#E85A2A; font-size:11px;">(${it.catName})</small></div>
+          <div class="ci-desc">${it.desc}</div>
+          <div class="ci-price">${it.price} DH</div>
+          <button class="ci-remove" data-key="${k}">RETIRER</button>
+        </div>
+        <div class="ci-qty">
+          <button data-act="dec" data-key="${k}">−</button>
+          <span>${it.qty}</span>
+          <button data-act="inc" data-key="${k}">+</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  if (cartTotalEl) cartTotalEl.textContent = total + ' DH';
 
-  cartBody.querySelectorAll('[data-act]').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      const k = b.dataset.key;
-      if(b.dataset.act==='inc') cart[k].qty++;
-      else { cart[k].qty--; if(cart[k].qty<=0) delete cart[k]; }
-      renderCart();
+  if (cartBody) {
+    cartBody.querySelectorAll('[data-act]').forEach(b => {
+      b.addEventListener('click', () => {
+        const k = b.dataset.key;
+        if (b.dataset.act === 'inc') cart[k].qty++;
+        else { cart[k].qty--; if (cart[k].qty <= 0) delete cart[k]; }
+        renderCart();
+      });
     });
-  });
-  cartBody.querySelectorAll('.ci-remove').forEach(b=>{
-    b.addEventListener('click', ()=>{ delete cart[b.dataset.key]; renderCart(); });
-  });
+    cartBody.querySelectorAll('.ci-remove').forEach(b => {
+      b.addEventListener('click', () => { delete cart[b.dataset.key]; renderCart(); });
+    });
+  }
 }
 
 // ---------- Cart open/close ----------
 const cartOverlay = document.getElementById('cartOverlay');
-document.getElementById('cartToggle').addEventListener('click', ()=> cartOverlay.classList.add('open'));
-document.getElementById('cartCloseBtn').addEventListener('click', ()=> cartOverlay.classList.remove('open'));
-cartOverlay.addEventListener('click', (e)=>{ if(e.target===cartOverlay) cartOverlay.classList.remove('open'); });
+if (document.getElementById('cartToggle')) {
+  document.getElementById('cartToggle').addEventListener('click', () => cartOverlay.classList.add('open'));
+}
+if (document.getElementById('cartCloseBtn')) {
+  document.getElementById('cartCloseBtn').addEventListener('click', () => cartOverlay.classList.remove('open'));
+}
+if (cartOverlay) {
+  cartOverlay.addEventListener('click', (e) => { if (e.target === cartOverlay) cartOverlay.classList.remove('open'); });
+}
 
 // ---------- Geolocation ----------
 const locStatus = document.getElementById('locStatus');
-document.getElementById('shareLocBtn').addEventListener('click', ()=>{
-  if(!navigator.geolocation){ locStatus.textContent = 'Géolocalisation non disponible'; return; }
-  locStatus.textContent = 'Localisation en cours…';
-  navigator.geolocation.getCurrentPosition(
-    (pos)=>{
-      userLoc = { lat:pos.coords.latitude, lng:pos.coords.longitude };
-      locStatus.textContent = 'Position partagée ✓';
-      locStatus.classList.add('ok');
-    },
-    ()=>{ locStatus.textContent = 'Position refusée — vous pouvez continuer sans.'; }
-  );
-});
-
-// ---------- WhatsApp order ----------
-document.getElementById('sendWaBtn').addEventListener('click', ()=>{
-  const keys = Object.keys(cart).filter(k=>cart[k].qty>0);
-  if(keys.length===0){ return; }
-  const name = document.getElementById('custName').value.trim() || 'Non renseigné';
-  const phone = document.getElementById('custPhone').value.trim() || 'Non renseigné';
-  let total = 0;
-  let lines = keys.map(k=>{
-    const it = cart[k];
-    total += it.price*it.qty;
-    return `- ${it.name} x${it.qty} (${it.price*it.qty} DH)`;
+if (document.getElementById('shareLocBtn')) {
+  document.getElementById('shareLocBtn').addEventListener('click', () => {
+    if (!navigator.geolocation) { locStatus.textContent = 'Géolocalisation non disponible'; return; }
+    locStatus.textContent = 'Localisation en cours…';
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        locStatus.textContent = 'Position partagée ✓';
+        locStatus.classList.add('ok');
+      },
+      () => { locStatus.textContent = 'Position refusée — vous pouvez continuer sans.'; }
+    );
   });
-  let msg = `*Nouvelle commande Shinzō Sushi*%0A%0A`;
-  msg += `Client: ${name}%0A`;
-  msg += `Téléphone: ${phone}%0A`;
-  if(userLoc){
-    msg += `Position: https://maps.google.com/?q=${userLoc.lat},${userLoc.lng}%0A`;
-  }
-  msg += `%0ACommande:%0A${lines.join('%0A')}%0A`;
-  msg += `%0ATotal: ${total} DH`;
-  window.open(`https://wa.me/212693959085?text=${msg}`, '_blank');
-});
+}
+
+// ---------- WhatsApp Order with Category Included ----------
+if (document.getElementById('sendWaBtn')) {
+  document.getElementById('sendWaBtn').addEventListener('click', () => {
+    const keys = Object.keys(cart).filter(k => cart[k].qty > 0);
+    if (keys.length === 0) { return; }
+    const name = document.getElementById('custName').value.trim() || 'Non renseigné';
+    const phone = document.getElementById('custPhone').value.trim() || 'Non renseigné';
+    let total = 0;
+
+    // zedna ism categorie f msg d cmmnd 
+    let lines = keys.map(k => {
+      const it = cart[k];
+      total += it.price * it.qty;
+      return `- [${it.catName}] ${it.name} x${it.qty} (${it.price * it.qty} DH)`;
+    });
+
+    let msg = `*Nouvelle commande Shinzō Sushi*%0A%0A`;
+    msg += `Client: ${name}%0A`;
+    msg += `Téléphone: ${phone}%0A`;
+    if (userLoc) {
+      msg += `Position: https://maps.google.com/?q=${userLoc.lat},${userLoc.lng}%0A`;
+    }
+    msg += `%0ACommande:%0A${lines.join('%0A')}%0A`;
+    msg += `%0ATotal: ${total} DH`;
+    window.open(`https://wa.me/212693959085?text=${msg}`, '_blank');
+  });
+}
 
 // ---------- 3D Gallery ----------
 const stage = document.getElementById('galleryStage');
 const dotsWrap = document.getElementById('galleryDots');
 let gIndex = 0;
-GALLERY_IMAGES.forEach((src,i)=>{
-  const el = document.createElement('div');
-  el.className = 'gslide';
-  el.innerHTML = `<img src="${src}" alt="Plat Shinzō Sushi ${i+1}" draggable="false">`;
-  stage.appendChild(el);
-  const dot = document.createElement('button');
-  dot.className = 'gdot' + (i===0?' active':'');
-  dot.addEventListener('click', ()=>{ gIndex=i; updateGallery(); resetAuto(); });
-  dotsWrap.appendChild(dot);
-});
-const gslides = Array.from(stage.querySelectorAll('.gslide'));
 
-function updateGallery(){
-  const n = gslides.length;
-  gslides.forEach((el,i)=>{
-    let diff = i - gIndex;
-    if(diff > n/2) diff -= n;
-    if(diff < -n/2) diff += n;
-    const abs = Math.abs(diff);
-    if(abs>2){ el.style.opacity=0; el.style.pointerEvents='none'; return; }
-    el.style.pointerEvents='auto';
-    const x = diff*185;
-    const scale = diff===0 ? 1 : 0.72;
-    const rotY = diff===0 ? 0 : (diff>0? -28: 28);
-    const z = diff===0 ? 0 : -160;
-    el.style.opacity = abs===0 ? 1 : (abs===1? .7 : .35);
-    el.style.zIndex = 10-abs;
-    el.style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`;
-    el.style.filter = diff===0 ? 'none' : 'brightness(.6)';
+if (stage && dotsWrap && typeof GALLERY_IMAGES !== 'undefined') {
+  GALLERY_IMAGES.forEach((src, i) => {
+    const el = document.createElement('div');
+    el.className = 'gslide';
+    el.innerHTML = `<img src="${src}" alt="Plat Shinzō Sushi ${i + 1}" draggable="false">`;
+    stage.appendChild(el);
+    const dot = document.createElement('button');
+    dot.className = 'gdot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => { gIndex = i; updateGallery(); resetAuto(); });
+    dotsWrap.appendChild(dot);
   });
-  Array.from(dotsWrap.children).forEach((d,i)=> d.classList.toggle('active', i===gIndex));
+  
+  const gslides = Array.from(stage.querySelectorAll('.gslide'));
+
+  function updateGallery() {
+    const n = gslides.length;
+    gslides.forEach((el, i) => {
+      let diff = i - gIndex;
+      if (diff > n / 2) diff -= n;
+      if (diff < -n / 2) diff += n;
+      const abs = Math.abs(diff);
+      if (abs > 2) { el.style.opacity = 0; el.style.pointerEvents = 'none'; return; }
+      el.style.pointerEvents = 'auto';
+      const x = diff * 185;
+      const scale = diff === 0 ? 1 : 0.72;
+      const rotY = diff === 0 ? 0 : (diff > 0 ? -28 : 28);
+      const z = diff === 0 ? 0 : -160;
+      el.style.opacity = abs === 0 ? 1 : (abs === 1 ? .7 : .35);
+      el.style.zIndex = 10 - abs;
+      el.style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`;
+      el.style.filter = diff === 0 ? 'none' : 'brightness(.6)';
+    });
+    Array.from(dotsWrap.children).forEach((d, i) => d.classList.toggle('active', i === gIndex));
+  }
+  updateGallery();
+
+  let autoTimer = setInterval(() => { gIndex = (gIndex + 1) % gslides.length; updateGallery(); }, 3800);
+  function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => { gIndex = (gIndex + 1) % gslides.length; updateGallery(); }, 3800); }
+
+  // Drag / Swipe 3D Gallery
+  let dragStartX = null;
+  stage.addEventListener('pointerdown', (e) => { dragStartX = e.clientX; stage.classList.add('grabbing'); });
+  window.addEventListener('pointerup', (e) => {
+    if (dragStartX === null) return;
+    const dx = e.clientX - dragStartX;
+    if (dx > 50) { gIndex = (gIndex - 1 + gslides.length) % gslides.length; updateGallery(); resetAuto(); }
+    else if (dx < -50) { gIndex = (gIndex + 1) % gslides.length; updateGallery(); resetAuto(); }
+    dragStartX = null; stage.classList.remove('grabbing');
+  });
 }
-updateGallery();
-
-let autoTimer = setInterval(()=>{ gIndex = (gIndex+1)%gslides.length; updateGallery(); }, 3800);
-function resetAuto(){ clearInterval(autoTimer); autoTimer = setInterval(()=>{ gIndex=(gIndex+1)%gslides.length; updateGallery(); }, 3800); }
-
-// drag / swipe
-let dragStartX=null;
-stage.addEventListener('pointerdown', (e)=>{ dragStartX = e.clientX; stage.classList.add('grabbing'); });
-window.addEventListener('pointerup', (e)=>{
-  if(dragStartX===null) return;
-  const dx = e.clientX - dragStartX;
-  if(dx > 50){ gIndex = (gIndex-1+gslides.length)%gslides.length; updateGallery(); resetAuto(); }
-  else if(dx < -50){ gIndex = (gIndex+1)%gslides.length; updateGallery(); resetAuto(); }
-  dragStartX = null; stage.classList.remove('grabbing');
-});
