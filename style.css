@@ -11,7 +11,7 @@
     --text-faint:#6f675e;
     --shadow: 0 30px 60px -25px rgba(0,0,0,.65);
   }
-  :root:not([data-theme="light"]){ }
+ /* :root:not([data-theme="light"]){ }*/
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --bg:#121212; --bg-raised:#181614; --card:#1b1917; --line:#2c2925;
