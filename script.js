@@ -450,8 +450,8 @@ function slugify(str) {
 function dishCard(catId, catName, groupLabel, item) {
   const key = itemKey(catId, groupLabel, item.name);
   const imgSlug = [catId, groupLabel ? slugify(groupLabel) : '', slugify(item.name)]
-    .filter(Boolean).join('-');
-  const imgPath = `images/dishes/${imgSlug}.jpg`;
+    .filter(Boolean).join('_');
+  const imgPath = `products/${imgSlug}.png`;
 
   return `<div class="dish-card" data-key="${key}">
     <div class="dish-img-wrap">
