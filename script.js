@@ -731,7 +731,7 @@ if (document.getElementById('sendWaBtn')) {
     let lines = keys.map(k => {
       const it = cart[k];
       total += it.price * it.qty;
-      return `- [${it.catName}] ${it.name} x${it.qty} (${it.price * it.qty} DH)`;
+      return `- *x${it.qty}*  - [${it.catName}] ${it.name}  (${it.price * it.qty} DH)`;
     });
 
     let msg = `*Nouvelle commande Shinzō Sushi*%0A%0A`;
