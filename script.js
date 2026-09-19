@@ -31,7 +31,7 @@ const MENU = [
     "tagline": "16 · 24 · 40 pièces",
     "groups": [
       {
-        "label": "16 Pièces",
+        "label": " Assortiments 16 Pièces",
         "items": [
           {"name": "California", "desc": "California roll 4, California ebi fry 4, California cream cheese 4, California chaki yaki 4", "price": 99},
           {"name": "Mixte", "desc": "Norvégien 4, Océane 4, fry ebi fry 4, saumon bébé balls 4", "price": 109},
@@ -39,7 +39,7 @@ const MENU = [
         ]
       },
       {
-        "label": "24 Pièces",
+        "label": " Assortiments 24 Pièces",
         "items": [
           {"name": "California", "desc": "California rolls 4, sésame rolls 4, cream cheese rolls 4, ebi fry rolls 4, shaké yaki rolls 4, ebi tobiko rolls 4", "price": 149},
           {"name": "Mixte", "desc": "Crème cheese 4, ebi fry rolls 4, shake yaki rolls 4, fry ebi fry 6, aromaki crevette 6", "price": 180},
@@ -47,7 +47,7 @@ const MENU = [
         ]
       },
       {
-        "label": "40 Pièces",
+        "label": " Assortiments 40 Pièces",
         "items": [
           {"name": "California", "desc": "California rolls 4, California sésame 4, cream cheese 4, ebi fry 4, ocean 4, shaké yaki 4, ebi tobiko 4, norvégien 4, alascan roll 4, miami roll 4", "price": 249},
           {"name": "Mixte", "desc": "Crème cheese 4, California rolls 4, pizza sushi 4, shake yaki rolls 4, ebi fry 4, tiger eye 6, aromakis crevette 6, saumon bébé ball 4, norvégien 4", "price": 285},
@@ -62,21 +62,21 @@ const MENU = [
     "tagline": "Plateaux à partager",
     "groups": [
       {
-        "label": "50 Pièces",
+        "label": " bateau 50 Pièces",
         "items": [
           {"name": "Normal", "desc": "Sélection généreuse pour partager à plusieurs", "price": 349},
           {"name": "Luxe", "desc": "Sélection premium pour partager à plusieurs", "price": 449}
         ]
       },
       {
-        "label": "100 Pièces",
+        "label": "bateau 100 Pièces",
         "items": [
           {"name": "Normal", "desc": "Sélection généreuse pour partager à plusieurs", "price": 650},
           {"name": "Luxe", "desc": "Sélection premium pour partager à plusieurs", "price": 750}
         ]
       },
       {
-        "label": "150 Pièces",
+        "label": "bateau 150 Pièces",
         "items": [
           {"name": "Normal", "desc": "Sélection généreuse pour partager à plusieurs", "price": 999},
           {"name": "Luxe", "desc": "Sélection premium pour partager à plusieurs", "price": 1200}
@@ -106,7 +106,7 @@ const MENU = [
   {
     "id": "crunchy",
     "name": "Crunchy Rolls",
-    "tagline": "5 pièces",
+    "tagline": "Crunchy Rolls 5 pièces",
     "items": [
       {"name": "Fry Ebi Fry", "desc": "Crevette panée, surimi pané, tobiko, fromage", "price": 39},
       {"name": "Fry Salmon Fry", "desc": "Saumon pané, surimi pané, tobiko, cheese", "price": 39},
@@ -125,7 +125,7 @@ const MENU = [
   {
     "id": "shinzorolls",
     "name": "Shinzo Rolls",
-    "tagline": "5 pièces — nos créations signature",
+    "tagline": " Shinzo Rolls 5 pièces ",
     "items": [
       {"name": "Kani Shake", "desc": "Saumon, crevette panée, crevette cuite, crabe, avocat, surimi, cheese", "price": 61},
       {"name": "Tiger", "desc": "Crevettes cuites, crevettes panées, crabe, avocat, cheese", "price": 45},
@@ -380,11 +380,11 @@ const MENU = [
     "tagline": "Pour accompagner",
     "groups": [
       {
-        "label": "Jus Frais",
+        "label": "Jus ",
         "items": [
           {"name": "Jus d'Orange", "desc": "Orange pressée", "price": 17},
           {"name": "Jus de Mangue et Orange", "desc": "Mangue, orange", "price": 20},
-          {"name": "Jus d'Avocat", "desc": "Avocat frais", "price": 20},
+          {"name": "Jus d'Avocat", "desc": "Avocat ", "price": 20},
           {"name": "Jus de Citron Gingembre", "desc": "Citron, gingembre", "price": 20}
         ]
       },
@@ -467,6 +467,7 @@ function dishCard(catId, catName, groupLabel, item) {
           data-key="${key}" 
           data-cat="${catId}" 
           data-catname="${catName.replace(/"/g, '&quot;')}" 
+          data-groupname="${(groupLabel || '').replace(/"/g, '&quot;')}"
           data-group="${groupLabel || ''}" 
           data-name="${item.name.replace(/"/g, '&quot;')}" 
           data-desc="${item.desc.replace(/"/g, '&quot;')}" 
@@ -556,10 +557,14 @@ function attachAddButtons() {
   document.querySelectorAll('.addbtn').forEach(btn => {
     btn.addEventListener('click', () => {
       const key = btn.dataset.key;
+      const groupName = btn.dataset.groupname;
+      const catName = btn.dataset.catname;
+      const specificCategory = (groupName && groupName.trim() !== '') ? groupName : catName;
+
       if (!cart[key]) {
         cart[key] = { 
           name: btn.dataset.name, 
-          catName: btn.dataset.catname, // hna zedna ism d categorie
+          catName: specificCategory, // tad9i9 d cmmnd 
           desc: btn.dataset.desc, 
           price: parseFloat(btn.dataset.price), 
           qty: 0 
