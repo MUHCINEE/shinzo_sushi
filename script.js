@@ -1,11 +1,12 @@
 // MENU DATA
 const MENU = [
   {
+    
     "id": "aromaki",
     "name": "Aromaki",
     "tagline": "6 pièces",
     "items": [
-      {"name": "Saumon", "desc": "Saumon, surimi, avocat, cheese, tobiko", "price": 51},
+      {"name": "Saumon", "desc": "Saumon, surimi, avocat, cheese, tobiko", "price": 51 },
       {"name": "Crevette", "desc": "Crevettes panées, surimi, avocat, cheese, tobiko", "price": 51},
       {"name": "Crabe", "desc": "Crabe, crevettes, avocat, surimi, cheese, tobiko", "price": 56},
       {"name": "Saumon Mangue", "desc": "Saumon, crevette cuite, mangue, cheese, tobiko", "price": 61},
@@ -446,38 +447,7 @@ function slugify(str) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-+|-+$)/g, '');
 }
-/*
-function dishCard(catId, catName, groupLabel, item) {
-  const key = itemKey(catId, groupLabel, item.name);
-  const imgSlug = [catId, groupLabel ? slugify(groupLabel) : '', slugify(item.name)]
-    .filter(Boolean).join('_');
-  const imgPath = `products/${imgSlug}.png`;
 
-  return `<div class="dish-card" data-key="${key}">
-    <div class="dish-img-wrap">
-      <img src="${imgPath}" alt="${item.name.replace(/"/g, '&quot;')}" loading="lazy"
-        onerror="this.classList.add('img-broken'); this.onerror=null;">
-    </div>
-    <div class="dcontent">
-      <p class="dname display">${item.name}</p>
-      <p class="ddesc">${item.desc}</p>
-      <div class="drow">
-        <span class="dprice">${item.price}<sup>DH</sup></span>
-        <button class="addbtn" 
-          data-key="${key}" 
-          data-cat="${catId}" 
-          data-catname="${catName.replace(/"/g, '&quot;')}" 
-          data-groupname="${(groupLabel || '').replace(/"/g, '&quot;')}"
-          data-group="${groupLabel || ''}" 
-          data-name="${item.name.replace(/"/g, '&quot;')}" 
-          data-desc="${item.desc.replace(/"/g, '&quot;')}" 
-          data-price="${item.price}" 
-          aria-label="Ajouter ${item.name}">+</button>
-      </div>
-    </div>
-  </div>`;
-}
-*/
 
 // Clean slug function - spaces matrum dashes-ai '_' aaga maathum
 function customSlug(str) {
@@ -490,27 +460,27 @@ function customSlug(str) {
     .replace(/[^\w\_]+/g, ''); // Unwanted characters-ai remove pannum
 }
 
+
 function dishCard(catId, catName, groupLabel, item) {
   const key = itemKey(catId, groupLabel, item.name);
   
-  // Custom slug generator use panni '_'-al mattum connect panroam
-  const cleanCat = customSlug(catId);
-  const cleanGroup = groupLabel ? customSlug(groupLabel) : '';
-  const cleanName = customSlug(item.name);
+  if (item.ipAddress) {
+    var imgPath = `products/${item.ipAddress}.png`;
+  } else {
+    const cleanCat = slugify(catId);
+    const cleanGroup = groupLabel ? slugify(groupLabel) : '';
+    const cleanName = slugify(item.name);
 
-  // Filter panni ellaam '_' vaadhiyaa seiyum
-  const imgSlug = [cleanCat, cleanGroup, cleanName]
-    .filter(Boolean)
-    .join('_');
-
-  const imgPath = `products/${imgSlug}.png`;
+    var imgSlug = [cleanCat, cleanGroup, cleanName].filter(Boolean).join('_');
+    var imgPath = `products/${imgSlug}.png`;
+  }
 
   return `<div class="dish-card" data-key="${key}">
     <div class="dish-img-wrap">
       <img src="${imgPath}" 
            alt="${item.name.replace(/"/g, '&quot;')}" 
            loading="lazy"
-           onerror="handleImgError(this, '${cleanCat}', '${cleanName}')">
+           onerror="handleImgFallback(this)">
     </div>
     <div class="dcontent">
       <p class="dname display">${item.name}</p>
@@ -532,6 +502,20 @@ function dishCard(catId, catName, groupLabel, item) {
   </div>`;
 }
 
+function handleImgFallback(img) {
+  if (!img.dataset.triedFallback) {
+    img.dataset.triedFallback = "true";
+    
+    if (img.src.includes('_')) {
+      img.src = img.src.replace(/_/g, '-');
+      return;
+    }
+  }
+  // if the img makaynx 
+  img.classList.add('img-broken');
+  img.onerror = null;
+}
+/*uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu*/
 function handleImgError(imgElement, cat, name) {
   const secondaryPath = `products/${cat}_${name}.png`;
   
