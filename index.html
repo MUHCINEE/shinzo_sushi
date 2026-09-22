@@ -1,28 +1,109 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Shinzō Sushi — Tanger</title>
+
+<!-- ============ SEO : Titre & Description ============ -->
+<title>Shinzō Sushi Tanger | Livraison Sushi Frais 14h–3h | Commande WhatsApp</title>
+<meta name="description" content="Shinzō Sushi Tanger : sushis japonais roulés minute, poissons ultra-frais, plateaux à partager, poke bowls et cuisine asiatique. Livraison rapide tous les jours de 14h à 3h du matin. Commandez en un clic via WhatsApp.">
+<meta name="keywords" content="sushi Tanger, livraison sushi Tanger, restaurant japonais Tanger, Shinzo Sushi, sushi à domicile Tanger, plateau sushi Maroc, commande sushi WhatsApp, sushi ouvert tard Tanger, california rolls Tanger, poke bowl Tanger">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="author" content="Shinzō Sushi">
+<meta name="theme-color" content="#E85A2A">
+<link rel="canonical" href="https://www.shinzo-sushi-tanger.ma/">
+<!-- Remplacez le domaine ci-dessus (canonical, og:url, og:image, JSON-LD) par votre vrai nom de domaine une fois en ligne -->
+
+<!-- ============ SEO : Open Graph (réseaux sociaux) ============ -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Shinzō Sushi">
+<meta property="og:title" content="Shinzō Sushi Tanger | Sushis Frais, Livrés Chaque Jour de 14h à 3h">
+<meta property="og:description" content="Sushis roulés minute, poissons ultra-frais et créations signature. Commandez en un message WhatsApp et faites-vous livrer à Tanger.">
+<meta property="og:image" content="https://www.shinzo-sushi-tanger.ma/images/image2.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://www.shinzo-sushi-tanger.ma/">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="ar_MA">
+
+<!-- ============ SEO : Twitter Card ============ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Shinzō Sushi Tanger | Sushis Frais Livrés Chaque Jour">
+<meta name="twitter:description" content="Sushis roulés minute, poissons ultra-frais. Ouvert tous les jours de 14h à 3h. Commande facile via WhatsApp.">
+<meta name="twitter:image" content="https://www.shinzo-sushi-tanger.ma/images/image2.jpg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="icon" type="logos/logo.jpg" href="images/favicon.ico">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+<!-- ============ SEO : Données structurées (Schema.org / JSON-LD) ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Shinzō Sushi",
+  "image": "https://www.shinzo-sushi-tanger.ma/images/image2.jpg",
+  "url": "https://www.shinzo-sushi-tanger.ma/",
+  "telephone": "+212531253534",
+  "servesCuisine": ["Japonaise", "Sushi", "Asiatique", "Fusion"],
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Imam Mouslim",
+    "addressLocality": "Tanger",
+    "addressCountry": "MA"
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "14:00",
+    "closes": "03:00"
+  }],
+  "sameAs": [
+    "https://www.instagram.com/shinzo_sushi_/",
+    "https://wa.me/212693959085"
+  ],
+  "menu": "https://www.shinzo-sushi-tanger.ma/#menu",
+  "acceptsReservations": "False"
+}
+</script>
 </head>
 <body>
 
 <header id="siteHeader">
   <a href="#top" class="logo">Shinzō<span>.</span></a>
-  <nav class="mainnav">
-    <a class="navlink" href="#menu">Menu</a>
-    <a class="navlink" href="#philosophy">Philosophie</a>
-    <a class="navlink" href="#gallery">Galerie</a>
-    <a class="navlink" href="#reviews">Avis</a>
-    <a class="navlink" href="#contact">Contact</a>
+  <nav class="mainnav" aria-label="Navigation principale">
+    <a class="navlink" href="#menu" data-i18n="nav_menu">Menu</a>
+    <a class="navlink" href="#philosophy" data-i18n="nav_philosophy">Philosophie</a>
+    <a class="navlink" href="#gallery" data-i18n="nav_gallery">Galerie</a>
+    <a class="navlink" href="#reviews" data-i18n="nav_reviews">Avis</a>
+    <a class="navlink" href="#contact" data-i18n="nav_contact">Contact</a>
   </nav>
   <div class="head-actions">
-    <a href="#menu" class="btn small" style="display:none" id="orderNowDesktop">Commander</a>
+    <a href="#menu" class="btn small" style="display:none" id="orderNowDesktop" data-i18n="nav_order">Commander</a>
+
+    <!-- Sélecteur de langue (Desktop) -->
+    <div class="lang-switch" id="langSwitch">
+      <button class="lang-btn" id="langToggleBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Choisir la langue">
+        <span id="langCurrentLabel">FR</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="lang-menu" id="langMenu" role="listbox">
+        <button class="lang-option" type="button" data-lang="ar" role="option">العربية</button>
+        <button class="lang-option" type="button" data-lang="fr" role="option">Français</button>
+        <button class="lang-option" type="button" data-lang="en" role="option">English</button>
+      </div>
+    </div>
+
+    <!-- Bascule Thème Clair / Sombre (Desktop) -->
+    <button class="theme-toggle" id="themeToggleBtn" type="button" aria-label="Changer de thème" title="Thème clair / sombre">
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+    </button>
+
     <button class="cart-btn" id="cartToggle" aria-label="Panier">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
       <span class="cart-badge" id="cartBadge" style="display:none">0</span>
@@ -34,12 +115,27 @@
 </header>
 
 <div class="mobile-menu" id="mobileMenu">
-  <button class="close-mm" id="closeMM">✕</button>
-  <a href="#menu">Menu</a>
-  <a href="#philosophy">Philosophie</a>
-  <a href="#gallery">Galerie</a>
-  <a href="#reviews">Avis</a>
-  <a href="#contact">Contact</a>
+  <button class="close-mm" id="closeMM" aria-label="Fermer">✕</button>
+  <a href="#menu" data-i18n="nav_menu">Menu</a>
+  <a href="#philosophy" data-i18n="nav_philosophy">Philosophie</a>
+  <a href="#gallery" data-i18n="nav_gallery">Galerie</a>
+  <a href="#reviews" data-i18n="nav_reviews">Avis</a>
+  <a href="#contact" data-i18n="nav_contact">Contact</a>
+
+  <!-- Contrôles Langue + Thème (Menu Mobile) -->
+  <div class="mm-controls">
+    <div class="mm-block-label" data-i18n="mm_lang_label">Langue</div>
+    <div class="mm-lang-row" id="mmLangRow">
+      <button class="mm-lang-pill" type="button" data-lang="ar">AR</button>
+      <button class="mm-lang-pill" type="button" data-lang="fr">FR</button>
+      <button class="mm-lang-pill" type="button" data-lang="en">EN</button>
+    </div>
+    <button class="mm-theme-btn" id="mmThemeToggleBtn" type="button">
+      <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+      <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+      <span id="mmThemeLabel" data-i18n="theme_toggle_light">Mode clair</span>
+    </button>
+  </div>
 </div>
 
 <div id="top"></div>
@@ -50,25 +146,28 @@
   <div class="overlay"></div>
   <div class="hero-content wrap">
     <div class="hero-eyebrow">SHINZŌ SUSHI · TANGER</div>
-    <h1 class="display">Le goût du <em>Japon</em>,<br>servi avec cœur.</h1>
-    <p class="sub">Sushis roulés minute, poissons ultra-frais et créations signature — préparés chaque soir de 14h à 3h du matin, livrés chez vous en un message.</p>
+    <h1 class="display">
+      <span data-i18n="hero_title_pre">Le goût du</span> <em data-i18n="hero_title_em">Japon</em>,<br>
+      <span data-i18n="hero_title_post">servi avec cœur.</span>
+    </h1>
+    <p class="sub" data-i18n="hero_sub">Sushis roulés minute, poissons ultra-frais et créations signature — préparés chaque soir de 14h à 3h du matin, livrés chez vous en un message.</p>
     <div class="hero-ctas">
-      <a href="#menu" class="btn">Découvrir le menu</a>
-      <a href="#reviews"  class="btn ghost">Voir les avis</a>
-      <a href="Shinzo-Sushi-Carte-Complete.pdf" class="btn ghost" download="Menu-Shinzo-Sushi.pdf">Télecharger menu</a>
+      <a href="#menu" class="btn" data-i18n="hero_cta_menu">Découvrir le menu</a>
+      <a href="#reviews"  class="btn ghost" data-i18n="hero_cta_reviews">Voir les avis</a>
+      <a href="Shinzo-Sushi-Carte-Complete.pdf" class="btn ghost" download="Menu-Shinzo-Sushi.pdf" data-i18n="hero_cta_download">Télecharger menu</a>
     </div>
   </div>
-  <div class="scroll-cue"><span class="line"></span>DÉFILER</div>
-  <div class="hero-meta">Ouvert tous les jours<br>14h00 — 03h00</div>
+  <div class="scroll-cue"><span class="line"></span><span data-i18n="scroll_cue">DÉFILER</span></div>
+  <div class="hero-meta"><span data-i18n="hero_meta_1">Ouvert tous les jours</span><br><span data-i18n="hero_meta_2">14h00 — 03h00</span></div>
 </section>
 <!--////////////////////////////////////////////////////////////////////////////-->
 
 <section id="menu">
   <div class="wrap">
     <div class="section-head">
-      <div class="kicker">CARTE COMPLÈTE</div>
-      <h2 class="display">Chaque pièce, roulée à la commande.</h2>
-      <p>Parcourez nos catégories et composez votre plateau. Les prix sont en dirhams (DH).</p>
+      <div class="kicker" data-i18n="menu_kicker">CARTE COMPLÈTE</div>
+      <h2 class="display" data-i18n="menu_title">Chaque pièce, roulée à la commande.</h2>
+      <p data-i18n="menu_desc">Parcourez nos catégories et composez votre plateau. Les prix sont en dirhams (DH).</p>
     </div>
     
     <div class="cat-tabs" id="catTabs"></div>
@@ -80,18 +179,18 @@
 <section id="philosophy">
   <div class="wrap">
     <div class="section-head">
-      <div class="kicker">NOTRE PHILOSOPHIE</div>
-      <h2 class="display">La fraîcheur n'est pas une option.</h2>
+      <div class="kicker" data-i18n="philo_kicker">NOTRE PHILOSOPHIE</div>
+      <h2 class="display" data-i18n="philo_title">La fraîcheur n'est pas une option.</h2>
     </div>
     <div class="pillars">
-      <div class="pillar"><span class="pnum">01</span><h4>Propreté irréprochable</h4><p>Cuisine et poste sushi nettoyés et contrôlés en continu, selon les standards les plus stricts.</p></div>
-      <div class="pillar"><span class="pnum">02</span><h4>Ingrédients ultra-frais</h4><p>Poissons et produits sélectionnés chaque jour, sans compromis sur la qualité.</p></div>
-      <div class="pillar"><span class="pnum">03</span><h4>Livraison rapide</h4><p>Votre commande roulée, emballée et en route vers vous dans les meilleurs délais.</p></div>
-      <div class="pillar"><span class="pnum">04</span><h4>Service attentionné</h4><p>Une équipe chaleureuse, à l'écoute, pour une expérience fluide du premier au dernier bouchée.</p></div>
+      <div class="pillar"><span class="pnum">01</span><h4 data-i18n="philo1_title">Propreté irréprochable</h4><p data-i18n="philo1_desc">Cuisine et poste sushi nettoyés et contrôlés en continu, selon les standards les plus stricts.</p></div>
+      <div class="pillar"><span class="pnum">02</span><h4 data-i18n="philo2_title">Ingrédients ultra-frais</h4><p data-i18n="philo2_desc">Poissons et produits sélectionnés chaque jour, sans compromis sur la qualité.</p></div>
+      <div class="pillar"><span class="pnum">03</span><h4 data-i18n="philo3_title">Livraison rapide</h4><p data-i18n="philo3_desc">Votre commande roulée, emballée et en route vers vous dans les meilleurs délais.</p></div>
+      <div class="pillar"><span class="pnum">04</span><h4 data-i18n="philo4_title">Service attentionné</h4><p data-i18n="philo4_desc">Une équipe chaleureuse, à l'écoute, pour une expérience fluide du premier au dernier bouchée.</p></div>
     </div>
     <div class="hours-strip">
-      <div class="htitle">Ouvert chaque jour <span class="hval">de 14h00 à 3h00</span></div>
-      <a href="tel:+212531253534" class="btn ghost">Appeler le restaurant</a>
+      <div class="htitle"><span data-i18n="hours_pre">Ouvert chaque jour</span> <span class="hval" data-i18n="hours_val">de 14h00 à 3h00</span></div>
+      <a href="tel:+212531253534" class="btn ghost" data-i18n="btn_call">Appeler le restaurant</a>
     </div>
   </div>
 </section>
@@ -99,15 +198,15 @@
 <section id="gallery">
   <div class="wrap">
     <div class="section-head">
-      <div class="kicker">EN CUISINE</div>
-      <h2 class="display">Un aperçu de nos assiettes.</h2>
+      <div class="kicker" data-i18n="gallery_kicker">EN CUISINE</div>
+      <h2 class="display" data-i18n="gallery_title">Un aperçu de nos assiettes.</h2>
     </div>
   </div>
   <div class="gallery-stage" id="galleryStage">
     <!-- slides injected by JS -->
   </div>
   <div class="gnav" id="galleryDots"></div>
-  <div class="gallery-hint">GLISSEZ POUR EXPLORER</div>
+  <div class="gallery-hint" data-i18n="gallery_hint">GLISSEZ POUR EXPLORER</div>
 </section>
 
 
@@ -116,11 +215,11 @@
 <section id="reviews">
   <div class="wrap">
     <div class="section-head">
-      <div class="kicker">ILS ONT AIMÉ</div>
-      <h2 class="display">Ce qu'en disent nos clients.</h2>
+      <div class="kicker" data-i18n="reviews_kicker">ILS ONT AIMÉ</div>
+      <h2 class="display" data-i18n="reviews_title">Ce qu'en disent nos clients.</h2>
     </div>
 
-    <!-- Grille unique contenant les 6 cartes -->
+    <!-- Grille unique contenant les 6 cartes. Les avis clients restent dans leur langue d'origine (authenticité du témoignage). -->
     <div class="review-grid">
       
       <div class="review-card">
@@ -201,10 +300,10 @@
 
 <section id="ordercta">
   <div class="wrap">
-    <h2 class="display">Une envie de sushi <em>maintenant</em> ?</h2>
+    <h2 class="display"><span data-i18n="cta_title_pre">Une envie de sushi</span> <em data-i18n="cta_title_em">maintenant</em> ?</h2>
     <div class="ctas">
-      <a href="https://wa.me/212693959085" target="_blank" rel="noopener" class="btn">Commander via WhatsApp</a>
-      <a href="tel:+212531253534" class="btn ghost">Appeler pour commander</a>
+      <a href="https://wa.me/212693959085" target="_blank" rel="noopener" class="btn" data-i18n="cta_whatsapp">Commander via WhatsApp</a>
+      <a href="tel:+212531253534" class="btn ghost" data-i18n="cta_call">Appeler pour commander</a>
     </div>
   </div>
 </section>
@@ -218,15 +317,15 @@
             onerror="this.classList.add('img-broken'); this.nextElementSibling.style.display='inline-flex';">
           <span class="foot-logo-fallback" style="display:none">Shinzō<span>.</span></span>
         </div>
-        <p>Sushi japonais authentique préparé minute, à Tanger.<br>Ouvert tous les jours de 14h00 à 3h00.</p>
+        <p><span data-i18n="footer_desc_1">Sushi japonais authentique préparé minute, à Tanger.</span><br><span data-i18n="footer_desc_2">Ouvert tous les jours de 14h00 à 3h00.</span></p>
         <a href="tel:+212531253534" class="call-now"> +212 531 253 534</a>
         <div class="foot-address">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span>Imam mouslim, Tanger, Maroc</span>
+          <span data-i18n="footer_address">Imam mouslim, Tanger, Maroc</span>
         </div>
       </div>
       <div class="foot-col">
-        <h5>SUIVEZ-NOUS</h5>
+        <h5 data-i18n="footer_follow">SUIVEZ-NOUS</h5>
         <div class="social-row">
           <a class="social-icon" href="https://www.instagram.com/shinzo_sushi_/" target="_blank" rel="noopener" aria-label="Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
@@ -242,13 +341,13 @@
         </div>
       </div>
       <div class="foot-col">
-        <h5>HORAIRES</h5>
-        <p>Tous les jours<br>14h00 — 03h00</p>
+        <h5 data-i18n="footer_hours_title">HORAIRES</h5>
+        <p><span data-i18n="footer_hours_1">Tous les jours</span><br><span data-i18n="footer_hours_2">14h00 — 03h00</span></p>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© <span id="yr"></span> Shinzō Sushi. Tous droits réservés.</span>
-      <span>Tanger, Maroc</span>
+      <span>© <span id="yr"></span> Shinzō Sushi. <span data-i18n="footer_rights">Tous droits réservés.</span></span>
+      <span data-i18n="footer_location">Tanger, Maroc</span>
     </div>
   </div>
 </footer>
@@ -256,26 +355,34 @@
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart-modal">
     <div class="cart-head">
-      <h3 class="display">Votre panier</h3>
-      <button class="cart-close" id="cartCloseBtn">✕</button>
+      <h3 class="display" data-i18n="cart_title">Votre panier</h3>
+      <button class="cart-close" id="cartCloseBtn" aria-label="Fermer">✕</button>
     </div>
     <div class="cart-body" id="cartBody">
-      <div class="cart-empty">Votre panier est vide pour l'instant.</div>
+      <div class="cart-empty" data-i18n="cart_empty">Votre panier est vide pour l'instant.</div>
     </div>
     <div class="cart-foot" id="cartFoot" style="display:none">
-      <div class="cart-total"><span class="tl">TOTAL</span><span class="tv" id="cartTotal">0 DH</span></div>
-      <div class="field"><input type="text" id="custName" placeholder="Nom complet"></div>
-      <div class="field"><input type="tel" id="custPhone" placeholder="Numéro de téléphone"></div>
+      <div class="cart-total"><span class="tl" data-i18n="cart_total_label">TOTAL</span><span class="tv" id="cartTotal">0 DH</span></div>
+      <div class="field"><input type="text" id="custName" data-i18n-placeholder="placeholder_name" placeholder="Nom complet"></div>
+      <div class="field"><input type="tel" id="custPhone" data-i18n-placeholder="placeholder_phone" placeholder="Numéro de téléphone"></div>
       <div class="loc-row">
-        <button class="btn ghost small" id="shareLocBtn" type="button">📍 Partager ma position</button>
-        <span class="loc-status" id="locStatus">Position non partagée</span>
+        <button class="btn ghost small" id="shareLocBtn" type="button" data-i18n="btn_share_location">📍 Partager ma position</button>
+        <span class="loc-status" id="locStatus" data-i18n="loc_status_default">Position non partagée</span>
       </div>
-      <button class="btn block wa-send" id="sendWaBtn">Envoyer la commande via WhatsApp</button>
+      <button class="btn block wa-send" id="sendWaBtn" data-i18n="btn_send_order">Envoyer la commande via WhatsApp</button>
     </div>
   </div>
 </div>
 
 <script src="script.js"></script>
-
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('Service Worker registered! Scope:', reg.scope))
+                .catch(err => console.log('Service Worker registration failed:', err));
+        });
+    }
+</script>
 </body>
 </html>

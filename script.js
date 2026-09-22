@@ -414,6 +414,214 @@ const GALLERY_IMAGES = [
   "images/image10.jpg"
 ];
 
+// =====================================================================
+// THÈME (Clair / Sombre) — persistant via localStorage
+// =====================================================================
+const THEME_KEY = 'shinzo_theme';
+const htmlEl = document.documentElement;
+
+function getStoredTheme() {
+  try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+}
+function storeTheme(v) {
+  try { localStorage.setItem(THEME_KEY, v); } catch (e) { /* stockage indisponible, on ignore */ }
+}
+function applyTheme(theme) {
+  htmlEl.setAttribute('data-theme', theme);
+  storeTheme(theme);
+  document.querySelectorAll('#mmThemeLabel').forEach(el => {
+    el.setAttribute('data-i18n', theme === 'light' ? 'theme_toggle_dark' : 'theme_toggle_light');
+  });
+  translatePage(); // rafraîchit le libellé du bouton thème dans le menu mobile
+}
+function toggleTheme() {
+  const current = htmlEl.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  applyTheme(current === 'light' ? 'dark' : 'light');
+}
+// Application immédiate du thème sauvegardé (sans traduction, I18N n'est pas encore défini plus bas)
+// pour éviter tout flash visuel au chargement de la page.
+htmlEl.setAttribute('data-theme', getStoredTheme() === 'light' ? 'light' : 'dark');
+
+// =====================================================================
+// LANGUES (Arabe / Français / Anglais) — persistant via localStorage
+// =====================================================================
+const LANG_KEY = 'shinzo_lang';
+
+const I18N = {
+  nav_menu:            { fr:"Menu",                 en:"Menu",                 ar:"القائمة" },
+  nav_philosophy:       { fr:"Philosophie",          en:"Philosophy",           ar:"فلسفتنا" },
+  nav_gallery:          { fr:"Galerie",              en:"Gallery",              ar:"معرض الصور" },
+  nav_reviews:          { fr:"Avis",                 en:"Reviews",              ar:"التقييمات" },
+  nav_contact:          { fr:"Contact",              en:"Contact",              ar:"تواصل معنا" },
+  nav_order:            { fr:"Commander",            en:"Order now",            ar:"اطلب الآن" },
+  mm_lang_label:        { fr:"Langue",               en:"Language",             ar:"اللغة" },
+  theme_toggle_light:   { fr:"Mode clair",           en:"Light mode",           ar:"الوضع الفاتح" },
+  theme_toggle_dark:    { fr:"Mode sombre",          en:"Dark mode",            ar:"الوضع الداكن" },
+
+  hero_title_pre:       { fr:"Le goût du",           en:"The taste of",         ar:"طعم" },
+  hero_title_em:        { fr:"Japon",                en:"Japan",                ar:"اليابان" },
+  hero_title_post:      { fr:"servi avec cœur.",     en:"served with heart.",   ar:"يُقدَّم بشغف." },
+  hero_sub:             { fr:"Sushis roulés minute, poissons ultra-frais et créations signature — préparés chaque soir de 14h à 3h du matin, livrés chez vous en un message.",
+                           en:"Sushi rolled to order, ultra-fresh fish and signature creations — prepared every evening from 2pm to 3am, delivered to your door with a single message.",
+                           ar:"سوشي يُلف عند الطلب، أسماك طازجة جدًا وإبداعات خاصة — يُحضَّر كل مساء من الساعة 14:00 حتى 3 صباحًا، ويصلك بمجرد رسالة واحدة." },
+  hero_cta_menu:        { fr:"Découvrir le menu",    en:"Explore the menu",     ar:"اكتشف القائمة" },
+  hero_cta_reviews:     { fr:"Voir les avis",        en:"See reviews",          ar:"شاهد التقييمات" },
+  hero_cta_download:    { fr:"Télecharger menu",     en:"Download menu",        ar:"تحميل القائمة" },
+  scroll_cue:           { fr:"DÉFILER",              en:"SCROLL",               ar:"مرر للأسفل" },
+  hero_meta_1:           { fr:"Ouvert tous les jours",en:"Open every day",       ar:"مفتوح كل يوم" },
+  hero_meta_2:           { fr:"14h00 — 03h00",        en:"2:00 PM — 3:00 AM",    ar:"14:00 — 03:00" },
+
+  menu_kicker:          { fr:"CARTE COMPLÈTE",       en:"FULL MENU",            ar:"القائمة الكاملة" },
+  menu_title:           { fr:"Chaque pièce, roulée à la commande.",
+                           en:"Every piece, rolled to order.",
+                           ar:"كل قطعة تُلف عند الطلب." },
+  menu_desc:            { fr:"Parcourez nos catégories et composez votre plateau. Les prix sont en dirhams (DH).",
+                           en:"Browse our categories and build your platter. Prices are in Moroccan dirhams (DH).",
+                           ar:"تصفح فئاتنا وكوّن طبقك. الأسعار بالدرهم المغربي (DH)." },
+
+  philo_kicker:         { fr:"NOTRE PHILOSOPHIE",    en:"OUR PHILOSOPHY",       ar:"فلسفتنا" },
+  philo_title:          { fr:"La fraîcheur n'est pas une option.",
+                           en:"Freshness is not optional.",
+                           ar:"الطزاجة ليست خيارًا." },
+  philo1_title:         { fr:"Propreté irréprochable", en:"Impeccable cleanliness", ar:"نظافة لا تشوبها شائبة" },
+  philo1_desc:          { fr:"Cuisine et poste sushi nettoyés et contrôlés en continu, selon les standards les plus stricts.",
+                           en:"Kitchen and sushi station cleaned and checked continuously, to the strictest standards.",
+                           ar:"يتم تنظيف المطبخ ومحطة السوشي ومراقبتهما باستمرار وفق أعلى المعايير." },
+  philo2_title:         { fr:"Ingrédients ultra-frais", en:"Ultra-fresh ingredients", ar:"مكونات طازجة جدًا" },
+  philo2_desc:          { fr:"Poissons et produits sélectionnés chaque jour, sans compromis sur la qualité.",
+                           en:"Fish and products selected every day, with no compromise on quality.",
+                           ar:"يتم اختيار الأسماك والمنتجات يوميًا دون أي تنازل عن الجودة." },
+  philo3_title:         { fr:"Livraison rapide",      en:"Fast delivery",        ar:"توصيل سريع" },
+  philo3_desc:          { fr:"Votre commande roulée, emballée et en route vers vous dans les meilleurs délais.",
+                           en:"Your order rolled, packed and on its way to you as quickly as possible.",
+                           ar:"يتم لف طلبك وتغليفه وإرساله إليك في أسرع وقت ممكن." },
+  philo4_title:         { fr:"Service attentionné",  en:"Attentive service",    ar:"خدمة مميزة" },
+  philo4_desc:          { fr:"Une équipe chaleureuse, à l'écoute, pour une expérience fluide du premier au dernier bouchée.",
+                           en:"A warm, attentive team, for a smooth experience from the first to the last bite.",
+                           ar:"فريق ودود ومستمع لضمان تجربة سلسة من أول لقمة إلى آخرها." },
+  hours_pre:            { fr:"Ouvert chaque jour",   en:"Open every day",       ar:"مفتوح كل يوم" },
+  hours_val:            { fr:"de 14h00 à 3h00",      en:"from 2:00 PM to 3:00 AM", ar:"من 14:00 إلى 3:00 صباحًا" },
+  btn_call:             { fr:"Appeler le restaurant", en:"Call the restaurant", ar:"اتصل بالمطعم" },
+
+  gallery_kicker:       { fr:"EN CUISINE",           en:"IN THE KITCHEN",       ar:"في المطبخ" },
+  gallery_title:        { fr:"Un aperçu de nos assiettes.", en:"A glimpse of our dishes.", ar:"لمحة عن أطباقنا." },
+  gallery_hint:         { fr:"GLISSEZ POUR EXPLORER", en:"SWIPE TO EXPLORE",    ar:"اسحب للاستكشاف" },
+
+  reviews_kicker:       { fr:"ILS ONT AIMÉ",         en:"THEY LOVED IT",        ar:"أعجبهم كثيرًا" },
+  reviews_title:        { fr:"Ce qu'en disent nos clients.", en:"What our customers say.", ar:"ماذا يقول عملاؤنا." },
+
+  cta_title_pre:        { fr:"Une envie de sushi",   en:"Craving sushi",        ar:"هل تشتهي السوشي" },
+  cta_title_em:         { fr:"maintenant",           en:"right now",            ar:"الآن" },
+  cta_whatsapp:         { fr:"Commander via WhatsApp", en:"Order via WhatsApp", ar:"اطلب عبر واتساب" },
+  cta_call:             { fr:"Appeler pour commander", en:"Call to order",      ar:"اتصل للطلب" },
+
+  footer_desc_1:        { fr:"Sushi japonais authentique préparé minute, à Tanger.",
+                           en:"Authentic Japanese sushi made to order, in Tangier.",
+                           ar:"سوشي ياباني أصيل يُحضَّر عند الطلب، في طنجة." },
+  footer_desc_2:        { fr:"Ouvert tous les jours de 14h00 à 3h00.",
+                           en:"Open every day from 2:00 PM to 3:00 AM.",
+                           ar:"مفتوح يوميًا من 14:00 إلى 3:00 صباحًا." },
+  footer_address:       { fr:"Imam mouslim, Tanger, Maroc", en:"Imam Mouslim, Tangier, Morocco", ar:"إمام مسلم، طنجة، المغرب" },
+  footer_follow:        { fr:"SUIVEZ-NOUS",          en:"FOLLOW US",            ar:"تابعونا" },
+  footer_hours_title:   { fr:"HORAIRES",             en:"HOURS",                ar:"ساعات العمل" },
+  footer_hours_1:       { fr:"Tous les jours",       en:"Every day",            ar:"كل يوم" },
+  footer_hours_2:       { fr:"14h00 — 03h00",        en:"2:00 PM — 3:00 AM",    ar:"14:00 — 03:00" },
+  footer_rights:        { fr:"Tous droits réservés.", en:"All rights reserved.", ar:"جميع الحقوق محفوظة." },
+  footer_location:      { fr:"Tanger, Maroc",        en:"Tangier, Morocco",     ar:"طنجة، المغرب" },
+
+  cart_title:           { fr:"Votre panier",         en:"Your cart",            ar:"سلتك" },
+  cart_empty:           { fr:"Votre panier est vide pour l'instant.", en:"Your cart is empty for now.", ar:"سلتك فارغة حاليًا." },
+  cart_total_label:     { fr:"TOTAL",                en:"TOTAL",                ar:"المجموع" },
+  placeholder_name:     { fr:"Nom complet",          en:"Full name",            ar:"الاسم الكامل" },
+  placeholder_phone:    { fr:"Numéro de téléphone",  en:"Phone number",         ar:"رقم الهاتف" },
+  btn_share_location:   { fr:"📍 Partager ma position", en:"📍 Share my location", ar:"📍 شارك موقعي" },
+  loc_status_default:   { fr:"Position non partagée", en:"Location not shared", ar:"لم تتم مشاركة الموقع" },
+  loc_status_unavailable:{ fr:"Géolocalisation non disponible", en:"Geolocation unavailable", ar:"تحديد الموقع غير متاح" },
+  loc_status_loading:   { fr:"Localisation en cours…", en:"Locating…",          ar:"جارٍ تحديد الموقع…" },
+  loc_status_ok:        { fr:"Position partagée ✓",  en:"Location shared ✓",   ar:"تمت مشاركة الموقع ✓" },
+  loc_status_denied:    { fr:"Position refusée — vous pouvez continuer sans.", en:"Location denied — you can continue without it.", ar:"تم رفض الموقع — يمكنك المتابعة بدونه." },
+  btn_send_order:       { fr:"Envoyer la commande via WhatsApp", en:"Send order via WhatsApp", ar:"إرسال الطلب عبر واتساب" },
+  ci_remove:            { fr:"RETIRER",              en:"REMOVE",               ar:"إزالة" }
+};
+
+// Traductions du nom/de l'étiquette de chaque catégorie du menu (les noms de plats
+// eux-mêmes restent en français, comme c'est l'usage pour les cartes de restaurants).
+const CAT_I18N = {
+  aromaki:            { fr:{name:"Aromaki", tagline:"6 pièces"},                           en:{name:"Aromaki", tagline:"6 pieces"},                        ar:{name:"أروماكي", tagline:"6 قطع"} },
+  gratine:            { fr:{name:"Sushi Gratiné", tagline:"Four & fondant"},               en:{name:"Baked Sushi", tagline:"Oven-baked & melty"},          ar:{name:"سوشي مشوي", tagline:"من الفرن وذائب"} },
+  assortiments:       { fr:{name:"Assortiments", tagline:"16 · 24 · 40 pièces"},           en:{name:"Assortments", tagline:"16 · 24 · 40 pieces"},         ar:{name:"تشكيلات", tagline:"16 · 24 · 40 قطعة"} },
+  bateau:             { fr:{name:"Bateau", tagline:"Plateaux à partager"},                 en:{name:"Boat Platter", tagline:"Platters to share"},          ar:{name:"طبق القارب", tagline:"أطباق للمشاركة"} },
+  california:         { fr:{name:"California Rolls", tagline:"4 pièces"},                  en:{name:"California Rolls", tagline:"4 pieces"},               ar:{name:"كاليفورنيا رول", tagline:"4 قطع"} },
+  crunchy:            { fr:{name:"Crunchy Rolls", tagline:"Crunchy Rolls 5 pièces"},        en:{name:"Crunchy Rolls", tagline:"Crunchy Rolls, 5 pieces"},   ar:{name:"كرانشي رول", tagline:"5 قطع مقرمشة"} },
+  shinzorolls:        { fr:{name:"Shinzo Rolls", tagline:"Shinzo Rolls 5 pièces"},          en:{name:"Shinzo Rolls", tagline:"Shinzo Rolls, 5 pieces"},     ar:{name:"شينزو رول", tagline:"5 قطع من توقيعنا"} },
+  okifuto:            { fr:{name:"Okinawa · Futomaki · Maki", tagline:"Traditions roulées"},en:{name:"Okinawa · Futomaki · Maki", tagline:"Rolled traditions"}, ar:{name:"أوكيناوا · فوتوماكي · ماكي", tagline:"تقاليد ملفوفة"} },
+  topptemaki:         { fr:{name:"Toppings Roll · Temaki", tagline:"4 pièces / cône"},      en:{name:"Toppings Roll · Temaki", tagline:"4 pieces / cone"},  ar:{name:"تمياكي · لفائف مغطاة", tagline:"4 قطع / مخروط"} },
+  burritopizza:       { fr:{name:"Sushi Burrito · Crunchy Shinzo · Pizza", tagline:"Formats généreux"}, en:{name:"Sushi Burrito · Crunchy Shinzo · Pizza", tagline:"Generous formats"}, ar:{name:"بوريتو سوشي · كرانشي شينزو · بيتزا", tagline:"أحجام سخية"} },
+  sashimitacos:       { fr:{name:"Sashimi · Tacos Sushi · Nigiri", tagline:"Cru & signature"}, en:{name:"Sashimi · Sushi Tacos · Nigiri", tagline:"Raw & signature"}, ar:{name:"ساشيمي · تاكو سوشي · نيغيري", tagline:"نيء ومميز"} },
+  pokebowltartares:   { fr:{name:"Poke Bowl · Tartares", tagline:"Frais & vinaigré"},       en:{name:"Poke Bowl · Tartare", tagline:"Fresh & tangy"},       ar:{name:"بوكي بول · تارتار", tagline:"طازج ومنعش"} },
+  salades:            { fr:{name:"Salades", tagline:"Fraîcheur asiatique"},                 en:{name:"Salads", tagline:"Asian freshness"},                  ar:{name:"سلطات", tagline:"نكهة آسيوية منعشة"} },
+  soupes:             { fr:{name:"Soupes", tagline:"Bouillons faits maison"},               en:{name:"Soups", tagline:"Homemade broths"},                   ar:{name:"حساء", tagline:"مرق منزلي"} },
+  nemsbrochettes:     { fr:{name:"Nems · Tempura · Brochettes", tagline:"Panés & grillés"},  en:{name:"Spring Rolls · Tempura · Skewers", tagline:"Breaded & grilled"}, ar:{name:"نيمز · تيمبورا · أسياخ", tagline:"مقلي ومشوي"} },
+  nouilleswok:        { fr:{name:"Nouilles · Riz Cantonais · Wok", tagline:"Choix du wok"},  en:{name:"Noodles · Cantonese Rice · Wok", tagline:"Wok choices"}, ar:{name:"نودلز · أرز كانتوني · ووك", tagline:"أطباق الووك"} },
+  boissons:           { fr:{name:"Jus & Boissons", tagline:"Pour accompagner"},             en:{name:"Juices & Drinks", tagline:"To go with your meal"},    ar:{name:"عصائر ومشروبات", tagline:"لتكملة وجبتك"} }
+};
+
+function getCurrentLang() {
+  return document.documentElement.getAttribute('lang') || 'fr';
+}
+
+// Traducteur central : renvoie la chaîne dans la langue active (repli sur le français)
+function t(key) {
+  const lang = getCurrentLang();
+  const entry = I18N[key];
+  if (!entry) return '';
+  return entry[lang] || entry.fr || '';
+}
+
+function translatePage() {
+  const lang = getCurrentLang();
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const entry = I18N[key];
+    if (entry) el.textContent = entry[lang] || entry.fr;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    const entry = I18N[key];
+    if (entry) el.setAttribute('placeholder', entry[lang] || entry.fr);
+  });
+
+  // Active state des pastilles / options de langue
+  const shortLabel = { fr:'FR', en:'EN', ar:'AR' }[lang] || 'FR';
+  const langLabelEl = document.getElementById('langCurrentLabel');
+  if (langLabelEl) langLabelEl.textContent = shortLabel;
+  document.querySelectorAll('.lang-option').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+  document.querySelectorAll('.mm-lang-pill').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+
+  // Ré-affiche le panier et le menu (catégories) avec les nouveaux libellés
+  if (typeof renderAllMenu === 'function') renderAllMenu();
+  if (typeof renderCart === 'function') renderCart();
+
+  // Statut de localisation : ne retraduire que s'il est encore à sa valeur par défaut
+  const locEl = document.getElementById('locStatus');
+  if (locEl && locEl.dataset.i18nCurrentState) {
+    locEl.textContent = t(locEl.dataset.i18nCurrentState);
+  }
+}
+
+function setLanguage(lang) {
+  if (!['fr', 'en', 'ar'].includes(lang)) lang = 'fr';
+  document.documentElement.setAttribute('lang', lang);
+  document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* ignore */ }
+  translatePage();
+}
+
+function getStoredLang() {
+  try { return localStorage.getItem(LANG_KEY); } catch (e) { return null; }
+}
+
 // ---------- State ----------
 // Global Cart State
 let cart = {};
@@ -537,9 +745,11 @@ function renderAllMenu() {
   contentEl.innerHTML = '';
 
   MENU.forEach((cat, index) => {
+    const tabLang = getCurrentLang();
+    const tabI18n = CAT_I18N[cat.id];
     const tab = document.createElement('button');
     tab.className = 'cat-tab' + (index === 0 ? ' active' : '');
-    tab.textContent = cat.name;
+    tab.textContent = tabI18n ? (tabI18n[tabLang] || tabI18n.fr).name : cat.name;
     tab.addEventListener('click', () => {
       document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
@@ -554,7 +764,13 @@ function renderAllMenu() {
     sec.id = `cat-${cat.id}`;
     sec.className = 'menu-category-section';
 
-    let html = `<div class="cat-tag"><h3 class="display">${cat.name}</h3><span class="tagline">${cat.tagline || ''}</span></div>`;
+    // Nom / tagline de catégorie traduits si disponibles, sinon repli sur les données FR d'origine
+    const lang = getCurrentLang();
+    const catI18n = CAT_I18N[cat.id];
+    const catDisplayName = catI18n ? (catI18n[lang] || catI18n.fr).name : cat.name;
+    const catDisplayTagline = catI18n ? (catI18n[lang] || catI18n.fr).tagline : (cat.tagline || '');
+
+    let html = `<div class="cat-tag"><h3 class="display">${catDisplayName}</h3><span class="tagline">${catDisplayTagline || ''}</span></div>`;
 
     const renderRow = (items, groupLabel) => {
       const rowId = 'row_' + Math.random().toString(36).slice(2, 9);
@@ -699,7 +915,7 @@ function renderCart() {
   }
 
   if (keys.length === 0) {
-    if (cartBody) cartBody.innerHTML = '<div class="cart-empty">Votre panier est vide pour l&rsquo;instant.</div>';
+    if (cartBody) cartBody.innerHTML = `<div class="cart-empty">${t('cart_empty')}</div>`;
     if (cartFoot) cartFoot.style.display = 'none';
     return;
   }
@@ -714,7 +930,7 @@ function renderCart() {
           <div class="ci-name">${it.name} <small style="color:#E85A2A; font-size:11px;">(${it.catName})</small></div>
           <div class="ci-desc">${it.desc}</div>
           <div class="ci-price">${it.price} DH</div>
-          <button class="ci-remove" data-key="${k}">RETIRER</button>
+          <button class="ci-remove" data-key="${k}">${t('ci_remove')}</button>
         </div>
         <div class="ci-qty">
           <button data-act="dec" data-key="${k}">−</button>
@@ -755,17 +971,22 @@ if (cartOverlay) {
 
 // ---------- Geolocation ----------
 const locStatus = document.getElementById('locStatus');
+function setLocStatus(stateKey) {
+  if (!locStatus) return;
+  locStatus.dataset.i18nCurrentState = stateKey;
+  locStatus.textContent = t(stateKey);
+}
 if (document.getElementById('shareLocBtn')) {
   document.getElementById('shareLocBtn').addEventListener('click', () => {
-    if (!navigator.geolocation) { locStatus.textContent = 'Géolocalisation non disponible'; return; }
-    locStatus.textContent = 'Localisation en cours…';
+    if (!navigator.geolocation) { setLocStatus('loc_status_unavailable'); return; }
+    setLocStatus('loc_status_loading');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        locStatus.textContent = 'Position partagée ✓';
+        setLocStatus('loc_status_ok');
         locStatus.classList.add('ok');
       },
-      () => { locStatus.textContent = 'Position refusée — vous pouvez continuer sans.'; }
+      () => { setLocStatus('loc_status_denied'); }
     );
   });
 }
@@ -853,3 +1074,48 @@ if (stage && dotsWrap && typeof GALLERY_IMAGES !== 'undefined') {
     dragStartX = null; stage.classList.remove('grabbing');
   });
 }
+
+// =====================================================================
+// Sélecteur de langue — menu déroulant (desktop) + pastilles (mobile)
+// =====================================================================
+const langSwitch = document.getElementById('langSwitch');
+const langToggleBtn = document.getElementById('langToggleBtn');
+if (langSwitch && langToggleBtn) {
+  langToggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = langSwitch.classList.toggle('open');
+    langToggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  document.addEventListener('click', (e) => {
+    if (!langSwitch.contains(e.target)) langSwitch.classList.remove('open');
+  });
+  document.querySelectorAll('.lang-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setLanguage(btn.dataset.lang);
+      langSwitch.classList.remove('open');
+    });
+  });
+}
+document.querySelectorAll('.mm-lang-pill').forEach(btn => {
+  btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+});
+
+// Langue initiale : préférence sauvegardée, sinon français par défaut (langue d'origine du site)
+setLanguage(getStoredLang() || 'fr');
+
+// Écouteurs de la bascule de thème (déclarés ici, une fois translatePage() disponible)
+[document.getElementById('themeToggleBtn'), document.getElementById('mmThemeToggleBtn')].forEach(btn => {
+  if (btn) btn.addEventListener('click', toggleTheme);
+});
+
+// =====================================================================
+// Correctifs : effet de scroll sur le header + année dynamique du footer
+// =====================================================================
+const siteHeader = document.getElementById('siteHeader');
+if (siteHeader) {
+  const onScroll = () => siteHeader.classList.toggle('scrolled', window.scrollY > 30);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+const yearEl = document.getElementById('yr');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
