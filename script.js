@@ -402,16 +402,16 @@ const MENU = [
 
 // GALLERY IMAGES (Clean file paths)
 const GALLERY_IMAGES = [
-  "images/image1.jpg",
-  "images/image2.jpg",
-  "images/image3.jpeg",
-  "images/image4.jpeg",
-  "images/image5.jpeg",
-  "images/image6.jpeg",
-  "images/image7.jpg",
-  "images/image8.jpg",
-  "images/image9.jpg",
-  "images/image10.jpg"
+  "images/image1_optimized_.jpg",
+  "images/image2_optimized_.jpg",
+  "images/image3_optimized_.jpeg",
+  "images/image4_optimized_.jpeg",
+  "images/image5_optimized_.jpeg",
+  "images/image6_optimized_.jpeg",
+  "images/image7_optimized_.jpg",
+  "images/image8_optimized_.jpg",
+  "images/image9_optimized_.jpg",
+  "images/image10_optimized_.jpg"
 ];
 
 // =====================================================================
