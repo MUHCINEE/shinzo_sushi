@@ -773,11 +773,11 @@ function renderAllMenu() {
     let html = `<div class="cat-tag"><h3 class="display">${catDisplayName}</h3><span class="tagline">${catDisplayTagline || ''}</span></div>`;
 
     const renderRow = (items, groupLabel) => {
-      const rowId = 'row_' + Math.random().toString(36).slice(2, 9);
       let out = '';
       if (groupLabel) out += `<div class="group-label">${groupLabel}</div>`;
+      // All dishes laid out together in a responsive grid — no horizontal scroll/carousel.
       out += `<div class="carousel-row">
-        <div class="carousel-track" id="${rowId}">
+        <div class="dish-grid">
           ${items.map(it => dishCard(cat.id, cat.name, groupLabel, it)).join('')}
         </div>
       </div>`;
@@ -794,31 +794,9 @@ function renderAllMenu() {
     contentEl.appendChild(sec);
   });
 
-  // Center-scaling + PC mouse drag-to-scroll on every product row
-  document.querySelectorAll('.carousel-track').forEach(track => {
-    setupCarousel(track);
-    enableDragScroll(track);
-  });
+  // Product cards are now a static grid (no horizontal carousel), so no
+  // center-scaling or drag-to-scroll is applied here anymore.
   attachAddButtons();
-}
-
-function setupCarousel(track) {
-  function update() {
-    const rect = track.getBoundingClientRect();
-    const center = rect.left + rect.width / 2;
-    let closest = null, closestDist = Infinity;
-    track.querySelectorAll('.dish-card').forEach(card => {
-      const cr = card.getBoundingClientRect();
-      const ccenter = cr.left + cr.width / 2;
-      const dist = Math.abs(center - ccenter);
-      if (dist < closestDist) { closestDist = dist; closest = card; }
-    });
-    track.querySelectorAll('.dish-card').forEach(c => c.classList.toggle('is-center', c === closest));
-  }
-  track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
-  update();
-  setTimeout(update, 60);
-  window.addEventListener('resize', update);
 }
 
 function attachAddButtons() {
@@ -856,7 +834,7 @@ function saveCartFlash() {
 }
 
 // ---------- Drag / Scroll functionality for PC Mouse (Category Tabs + Product Rows) ----------
-// Reusable: works on .cat-tabs and on every .carousel-track (dish rows).
+// Reusable: currently applied to .cat-tabs (the horizontal category nav).
 function enableDragScroll(el, speed = 1.4) {
   if (!el || el.dataset.dragBound === '1') return;
   el.dataset.dragBound = '1';

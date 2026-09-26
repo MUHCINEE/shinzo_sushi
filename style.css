@@ -232,7 +232,7 @@
   .cat-tab.active{ color:var(--on-accent); background:var(--accent); }
   .cat-tab:hover, .cat-tab:active{ color:var(--text); background:rgba(232,90,42,.16); transform:translateY(-3px); }
   .cat-tab.active:hover{ color:var(--on-accent); background:var(--accent); }
-  /* Drag-to-scroll (mouse) affordance, applied via JS to .cat-tabs and .carousel-track */
+  /* Drag-to-scroll (mouse) affordance, applied via JS to .cat-tabs (the horizontal category nav) */
   .drag-scroll{ cursor:grab; }
   .drag-scroll.dragging{ cursor:grabbing; scroll-snap-type:none; }
   .cat-tag{ display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
@@ -242,27 +242,29 @@
   .group-label:first-of-type{ border-top:none; padding-top:0; }
 
   .carousel-row{ position:relative; }
-  .carousel-track{
-    display:flex; gap:22px; overflow-x:auto; scroll-snap-type:x mandatory; padding:20px 6px 30px;
-    scrollbar-width:none;
+  /* Product cards now sit in a responsive grid — no horizontal scrolling, everything visible at once. */
+  .dish-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+    gap:24px;
+    padding:20px 2px 30px;
   }
-  .carousel-track::-webkit-scrollbar{ display:none; }
+  @media (max-width:640px){
+    .dish-grid{ grid-template-columns:repeat(auto-fit, minmax(155px, 1fr)); gap:14px; }
+  }
 
   /* ---------- Dish / product cards : image plein cadre, jamais de débordement ---------- */
   .dish-card{
-    scroll-snap-align:center; flex:0 0 auto; width:270px; background:var(--card); border:1px solid var(--line);
+    width:100%; background:var(--card); border:1px solid var(--line);
     border-radius:0; padding:0 0 24px; display:flex; flex-direction:column; gap:14px; min-height:230px;
     overflow:hidden; /* filet de sécurité : rien ne peut jamais dépasser de la carte */
-    transition:transform .35s cubic-bezier(.22,.9,.3,1), border-color .2s ease, opacity .35s ease;
-    transform:scale(.92); opacity:.55;
+    transition:transform .3s cubic-bezier(.22,.9,.3,1), box-shadow .3s ease, border-color .25s ease;
   }
-  .dish-card.is-center{ transform:scale(1); opacity:1; border-color:var(--accent); }
-  /* Micro-interaction: pop on hover/active, takes priority over the center-scale state */
-  .dish-card:hover, .dish-card:active{
-    transform:translateY(-4px) scale(1.02);
+  /* Every card gets the same smooth lift + shadow + image zoom on hover/focus, not just one "active" card. */
+  .dish-card:hover, .dish-card:focus-within{
+    transform:translateY(-6px);
     border-color:var(--accent);
-    opacity:1;
-    transition:transform .2s ease, border-color .2s ease, opacity .2s ease;
+    box-shadow:0 20px 40px -20px rgba(0,0,0,.4);
   }
   /* Conteneur d'image : hauteur fixe par ratio, overflow verrouillé, image en position absolue
      pour garantir qu'aucune image (même très grande / mal proportionnée) ne dépasse jamais. */
@@ -277,6 +279,10 @@
   .dish-img-wrap img{
     position:absolute; inset:0; z-index:1; width:100%; height:100%;
     object-fit:cover; object-position:center; display:block; border-radius:0; max-width:none;
+    transition:transform .5s cubic-bezier(.22,.9,.3,1);
+  }
+  .dish-card:hover .dish-img-wrap img, .dish-card:focus-within .dish-img-wrap img{
+    transform:scale(1.08);
   }
   .dish-img-wrap img.img-broken{ display:none; }
   .dish-card .dcontent{ padding:20px 24px 0; display:flex; flex-direction:column; gap:14px; flex:1; min-width:0; }
