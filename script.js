@@ -710,6 +710,7 @@ function dishCard(catId, catName, groupLabel, item) {
   </div>`;
 }
 
+
 function handleImgFallback(img) {
   if (!img.dataset.triedFallback) {
     img.dataset.triedFallback = "true";
