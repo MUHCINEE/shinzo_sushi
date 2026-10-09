@@ -452,6 +452,7 @@ const I18N = {
   nav_philosophy:       { fr:"Philosophie",          en:"Philosophy",           ar:"فلسفتنا" },
   nav_gallery:          { fr:"Galerie",              en:"Gallery",              ar:"معرض الصور" },
   nav_reviews:          { fr:"Avis",                 en:"Reviews",              ar:"التقييمات" },
+  nav_location:         { fr:"Localisation",         en:"Location",             ar:"موقعنا" },
   nav_contact:          { fr:"Contact",              en:"Contact",              ar:"تواصل معنا" },
   nav_order:            { fr:"Commander",            en:"Order now",            ar:"اطلب الآن" },
   mm_lang_label:        { fr:"Langue",               en:"Language",             ar:"اللغة" },
@@ -509,6 +510,18 @@ const I18N = {
 
   reviews_kicker:       { fr:"ILS ONT AIMÉ",         en:"THEY LOVED IT",        ar:"أعجبهم كثيرًا" },
   reviews_title:        { fr:"Ce qu'en disent nos clients.", en:"What our customers say.", ar:"ماذا يقول عملاؤنا." },
+
+  loc_kicker:           { fr:"NOUS TROUVER",         en:"FIND US",              ar:"تجدوننا هنا" },
+  loc_title:            { fr:"Venez nous rendre visite.", en:"Come and visit us.", ar:"زورونا في مطعمنا." },
+  loc_desc:             { fr:"Retrouvez-nous à Tanger, ou laissez-nous venir à vous : on vous livre chaque jour de 14h à 3h.",
+                           en:"Find us in Tangier, or let us come to you: we deliver every day from 2pm to 3am.",
+                           ar:"تجدوننا في طنجة، أو دعونا نصل إليكم: نوصل كل يوم من الساعة 14:00 حتى 3 صباحًا." },
+  loc_map_title:        { fr:"Shinzō Sushi sur Google Maps", en:"Shinzō Sushi on Google Maps", ar:"شينزو سوشي على خرائط جوجل" },
+  loc_btn_maps:         { fr:"Accéder à Google Maps", en:"Open in Google Maps", ar:"افتح في خرائط جوجل" },
+  loc_address_label:    { fr:"ADRESSE",              en:"ADDRESS",              ar:"العنوان" },
+  loc_hours_label:      { fr:"HORAIRES",             en:"HOURS",                ar:"ساعات العمل" },
+  loc_hours_value:      { fr:"Tous les jours, de 14h00 à 03h00", en:"Every day, 2:00 PM to 3:00 AM", ar:"كل يوم، من 14:00 إلى 03:00" },
+  loc_phone_label:      { fr:"TÉLÉPHONE",            en:"PHONE",                ar:"الهاتف" },
 
   cta_title_pre:        { fr:"Une envie de sushi",   en:"Craving sushi",        ar:"هل تشتهي السوشي" },
   cta_title_em:         { fr:"maintenant",           en:"right now",            ar:"الآن" },
@@ -585,6 +598,10 @@ function translatePage() {
     const key = el.getAttribute('data-i18n');
     const entry = I18N[key];
     if (entry) el.textContent = entry[lang] || entry.fr;
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const entry = I18N[el.getAttribute('data-i18n-title')];
+    if (entry) el.setAttribute('title', entry[lang] || entry.fr);
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const key = el.getAttribute('data-i18n-placeholder');

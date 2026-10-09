@@ -112,7 +112,7 @@
   header.scrolled{ background:var(--header-bg-scrolled); padding:12px 28px; }
   .logo{ font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600; font-size:26px; letter-spacing:.02em; color:var(--text); }
   .logo span{ color:var(--accent); }
-  nav.mainnav{ display:flex; align-items:center; gap:34px; }
+  nav.mainnav{ display:flex; align-items:center; gap:clamp(18px, 2.4vw, 34px); }
   nav.mainnav a.navlink{ font-size:13.5px; letter-spacing:.03em; color:var(--text-dim); position:relative; padding:4px 0; }
   nav.mainnav a.navlink:hover{ color:var(--text); }
   nav.mainnav a.navlink::after{ content:''; position:absolute; left:0; bottom:-2px; width:0; height:1px; background:var(--accent); transition:width .25s ease; }
@@ -347,6 +347,51 @@
   .review-name{ font-size:13.5px; font-weight:600; }
   .review-loc{ font-size:12px; color:var(--text-faint); }
   @media (max-width:900px){ .review-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- Localisation ---------- */
+  #location{ background:var(--bg); border-top:1px solid var(--line); scroll-margin-top:70px; }
+  .loc-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:24px; align-items:stretch; }
+  .loc-card{
+    background:var(--card); border:1px solid var(--line); display:flex; flex-direction:column; min-width:0;
+    transition:border-color .25s ease, box-shadow .3s ease;
+  }
+  .loc-card:hover{ border-color:var(--accent); box-shadow:0 20px 40px -24px rgba(0,0,0,.4); }
+  /* Carte à droite en LTR (en RTL, l'ordre naturel la place déjà à droite) */
+  .loc-map-card{ order:2; }
+  .loc-info-card{ order:1; }
+  [dir="rtl"] .loc-map-card, [dir="rtl"] .loc-info-card{ order:0; }
+  .loc-map-frame{ position:relative; flex:1 1 auto; min-height:380px; background:var(--bg-raised); border-bottom:1px solid var(--line); overflow:hidden; }
+  .loc-map-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
+  .loc-map-action{ padding:20px 24px; }
+  .loc-map-action .btn{ white-space:normal; text-align:center; }
+  .loc-info-card{ padding:34px 30px; justify-content:space-between; gap:30px; }
+  .loc-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
+  .loc-list li{ display:flex; align-items:flex-start; gap:16px; padding:20px 0; border-bottom:1px solid var(--line); }
+  .loc-list li:first-child{ padding-top:0; }
+  .loc-list li:last-child{ border-bottom:none; padding-bottom:0; }
+  .loc-ico{
+    flex:0 0 auto; width:42px; height:42px; border:1px solid var(--line); background:var(--bg-raised);
+    display:flex; align-items:center; justify-content:center; color:var(--accent);
+  }
+  .loc-label{ font-size:11.5px; letter-spacing:.14em; color:var(--text-faint); margin-bottom:6px; }
+  .loc-value{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; line-height:1.35; color:var(--text); overflow-wrap:anywhere; }
+  html[lang="ar"] .loc-value{ font-family:'Cairo',serif; font-style:normal; font-size:18px; }
+  a.loc-tel{ display:inline-block; transition:color .2s ease; }
+  a.loc-tel:hover{ color:var(--accent); }
+  .loc-info-actions{ display:flex; flex-direction:column; gap:12px; }
+  .loc-info-actions .btn{ white-space:normal; text-align:center; }
+  @media (max-width:900px){
+    .loc-grid{ grid-template-columns:1fr; gap:20px; }
+    .loc-map-card{ order:0; }
+    .loc-info-card{ order:1; }
+    .loc-map-frame{ flex:none; min-height:0; height:340px; }
+  }
+  @media (max-width:640px){
+    .loc-map-frame{ height:290px; }
+    .loc-map-action{ padding:16px; }
+    .loc-info-card{ padding:26px 20px; }
+    .loc-value{ font-size:20px; }
+  }
 
   /* ---------- CTA strip ---------- */
   #ordercta{ text-align:center; padding:100px 0; }
