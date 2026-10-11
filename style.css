@@ -413,6 +413,15 @@
   .foot-logo-wrap img.img-broken{ display:none; }
   .foot-logo-wrap .foot-logo-fallback{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:26px; color:#F4EFE7; }
   .foot-logo-wrap .foot-logo-fallback span{ color:var(--accent); }
+  /*///////////////////////////////////////////////////////////*/
+      .foot-logo-wrap {
+      background: transparent !important; 
+      border: none !important;          
+      box-shadow: none !important;       
+      padding: 0 !important;             
+      margin: 0;
+    }
+  /*//////////////////////////////////////////////////////////*/
   footer p{ color:#a89f93; font-size:13.5px; line-height:1.8; margin:0; }
   .foot-col h5{ font-size:12px; letter-spacing:.12em; color:#8a8378; margin:0 0 18px; font-weight:600; }
   .foot-col a.fl{ display:flex; align-items:center; gap:10px; color:#a89f93; font-size:14.5px; margin-bottom:12px; transition:color .2s ease; }
